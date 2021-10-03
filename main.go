@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	//"bufio"
+	"bufio"
 	"fmt"
 	xls "github.com/xuri/excelize"
 	"io/ioutil"
@@ -18,6 +18,7 @@ import (
 var (
 	coll = getSession().DB("counter").C("counterRequestTranslate")
 	countV2 = getCountV2()
+	privateKey = getKey()
 )
 
 func getSession() *mgo.Session  {
@@ -112,7 +113,7 @@ func main() {
 	fmt.Println("count start",countV2)
 	//w, err := TranslateV2("car rental")
 	//fmt.Println(w, err)
-	ReadExcel("translatefile.xlsx")
+	//ReadExcel("translatefile.xlsx")
 	fmt.Println("count end",countV2)
 	save()
 	return
@@ -174,7 +175,7 @@ func TranslateV1(word string) (string, string) {
 	req, _ := http.NewRequest("POST", url, payload)
 
 	req.Header.Add("content-type", "application/json")
-	req.Header.Add("x-rapidapi-key", "3cb9a869c6msha09e6ad712fe86dp10a9f0jsnb6dd2d6ae7f6")
+	req.Header.Add("x-rapidapi-key", "")
 	req.Header.Add("x-rapidapi-host", "deep-translate1.p.rapidapi.com")
 
 	res, _ := http.DefaultClient.Do(req)
@@ -247,7 +248,7 @@ func TranslateV2(word string) (string, string) {
 	req, _ := http.NewRequest("POST", url, payload)
 
 	req.Header.Add("content-type", "application/json")
-	req.Header.Add("x-rapidapi-key", "3cb9a869c6msha09e6ad712fe86dp10a9f0jsnb6dd2d6ae7f6")
+	req.Header.Add("x-rapidapi-key", privateKey)
 	req.Header.Add("x-rapidapi-host", "translo.p.rapidapi.com")
 
 	res, _ := http.DefaultClient.Do(req)
@@ -259,4 +260,12 @@ func TranslateV2(word string) (string, string) {
 	fmt.Println(string(body))
 	fmt.Println(" total requests counts TranslateV2", countV2)
 	return Answer(res.StatusCode,body)
+}
+
+func getKey() string {
+	f, _:= os.OpenFile("l.txt",os.O_RDWR|os.O_CREATE, 0755)
+	b := bufio.NewReader(f)
+	key, _ := b.ReadString(byte('\n'))
+	fmt.Println(key)
+	return key
 }
