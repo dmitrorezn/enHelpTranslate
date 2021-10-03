@@ -152,7 +152,7 @@ func Translate(word string) (string, error) {
 
 	req.Header.Add("content-type", "application/x-www-form-urlencoded")
 	req.Header.Add("accept-encoding", "application/gzip")
-	req.Header.Add("x-rapidapi-key", "3cb9a869c6msha09e6ad712fe86dp10a9f0jsnb6dd2d6ae7f6")
+	req.Header.Add("x-rapidapi-key", "")
 	req.Header.Add("x-rapidapi-host", "google-translate1.p.rapidapi.com")
 
 	res, _ := http.DefaultClient.Do(req)
